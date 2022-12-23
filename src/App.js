@@ -1,20 +1,13 @@
 import './App.css';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Container } from '@mui/material';
-
-import LoginForm from './components/auth/LoginFormComponent';
-
-const theme = createTheme({
-  
-});
+import { ThemeProvider } from '@mui/material/styles';
+import { Outlet } from "react-router-dom";
+import theme from './libs/theme';
 
 function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <header></header>
-        <LoginForm />
-        <footer></footer>
+        <Outlet />
       </ThemeProvider>
     </div>
   );
