@@ -4,13 +4,13 @@ import { Outlet } from "react-router-dom";
 import theme from './libs/theme';
 
 function App() {
-  return (
+    return (
     <div className="App">
-      <ThemeProvider theme={theme}>
-        <Outlet />
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+            <Outlet />
+        </ThemeProvider>
     </div>
-  );
+    );
 }
 
 export default App;
