@@ -30,30 +30,33 @@ function LoginComponent() {
     const onSubmit = data => {
         setLoadingState(true)
         clearConditions()
+        let statusRegister = false
         axios.post(`${config_main.server_url_v1}/auth/login`, {...data})
             .then(res => {
-                setGlobalSuccess('Sign In is successfully')
-                validateNotAuth('')
+                setGlobalSuccess(res.data?.message)
+                setGlobalError('')
                 setLoadingState(false)
                 navigate('/')
             }).catch(e => {
+                statusRegister = true
                 setLoadingState(false)
-                switch(e.response.status) {
-                    case 422:
-                        validateResponseFromServer(e.response.data.data)
-                        break
-                    case 401:
-                        validateNotAuth(e.response.data.message)
-                        break
-                    default:
-                        validateNotAuth('Error Sign in')
+                if(e.response !== undefined && e.response.data !== undefined && e.response.data.data !== undefined) {
+                    switch(e.response.status) {
+                        case 422:
+                            validateResponseFromServer(e.response.data?.data)
+                            break
+                        case 401:
+                            setGlobalError(e.response.data?.message)
+                            break
+                        default:
+                            setGlobalError('Error Sign in')
+                    }
+                } else {
+                    if(statusRegister) navigate('/')
+                    else setGlobalError('Your registration is fail')
                 }
             })
     };
-
-    const validateNotAuth = (message) => {
-        setGlobalError(message)
-    }
 
     const validateResponseFromServer = (data) => {
         if(Object.keys(data).length > 0) {
@@ -116,7 +119,13 @@ function LoginComponent() {
                               <Controller
                                   name="password"
                                   control={control}
-                                  refs={register("password", {required: "The password is required."})}
+                                  refs={register("password", {
+                                      required: "The password is required.",
+                                      minLength: {
+                                          value: 8,
+                                          message: 'Your password must be more then 8 characters'
+                                      }
+                                  })}
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
