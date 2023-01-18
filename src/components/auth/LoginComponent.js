@@ -1,4 +1,4 @@
-import styles from './auth.module.css'
+import styles from './Auth.module.css'
 import {Grid, TextField, Container, Button } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {Form, useNavigate} from "react-router-dom"
@@ -7,8 +7,11 @@ import { Link } from "react-router-dom"
 import { config_main } from "../../config/config";
 import axios from "axios";
 import {useState} from "react";
+import { useDispatch } from 'react-redux'
+import {setAuthTokenAction} from "../../store/auth/authSlice";
 
 function LoginComponent() {
+    const dispatch = useDispatch()
     const { control, register, handleSubmit, setError, formState: { errors } } = useForm({
       defaultValues: {
           email: '',
@@ -36,6 +39,7 @@ function LoginComponent() {
                 setGlobalSuccess(res.data?.message)
                 setGlobalError('')
                 setLoadingState(false)
+                dispatch(setAuthTokenAction(res.data?.data?.access_token))
                 navigate('/')
             }).catch(e => {
                 statusRegister = true

@@ -1,6 +1,6 @@
 import {Button, Container, Grid, TextField} from "@mui/material"
 import {Form, Link, useNavigate} from "react-router-dom"
-import styles from "./auth.module.css"
+import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
 import {Controller, useForm} from "react-hook-form"
 import { useState } from "react"
