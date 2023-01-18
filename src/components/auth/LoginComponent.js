@@ -8,7 +8,8 @@ import { config_main } from "../../config/config";
 import axios from "axios";
 import {useState} from "react";
 import { useDispatch } from 'react-redux'
-import {setAuthTokenAction} from "../../store/auth/authSlice";
+import {setAuthTokenAction} from "../../store/auth/AuthSlice";
+import {setAppLoadingAction} from "../../store/AppSlice";
 
 function LoginComponent() {
     const dispatch = useDispatch()
@@ -40,7 +41,8 @@ function LoginComponent() {
                 setGlobalError('')
                 setLoadingState(false)
                 dispatch(setAuthTokenAction(res.data?.data?.access_token))
-                navigate('/')
+                dispatch(setAppLoadingAction(true))
+                //navigate('/')
             }).catch(e => {
                 statusRegister = true
                 setLoadingState(false)
