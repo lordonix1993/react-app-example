@@ -7,7 +7,6 @@ import MainLayoutComponent from "../components/MainLayoutComponent";
 import DashboardComponent from "../components/DashboardComponent";
 import CheckAuthMiddleware from "../middlewares/CheckAuthMiddleware";
 
-
 const router = createBrowserRouter([
     {
         path: "/",
@@ -20,7 +19,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                       path: "/",
-                        element: <CheckAuthMiddleware><DashboardComponent /></CheckAuthMiddleware>,
+                      element: <CheckAuthMiddleware><DashboardComponent /></CheckAuthMiddleware>,
                     },
                   ],
             },

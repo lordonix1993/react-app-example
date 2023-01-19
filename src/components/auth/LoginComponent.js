@@ -4,12 +4,9 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import {Form, useNavigate} from "react-router-dom"
 import { useForm, Controller } from "react-hook-form"
 import { Link } from "react-router-dom"
-import { config_main } from "../../config/config";
-import axios from "axios";
 import {useState} from "react";
 import { useDispatch } from 'react-redux'
-import {setAuthTokenAction} from "../../store/auth/AuthSlice";
-import {setAppLoadingAction} from "../../store/AppSlice";
+import { LoginAuthAction } from "../../store/actions/AuthActions";
 
 function LoginComponent() {
     const dispatch = useDispatch()
@@ -34,34 +31,32 @@ function LoginComponent() {
     const onSubmit = data => {
         setLoadingState(true)
         clearConditions()
-        let statusRegister = false
-        axios.post(`${config_main.server_url_v1}/auth/login`, {...data})
-            .then(res => {
-                setGlobalSuccess(res.data?.message)
-                setGlobalError('')
-                setLoadingState(false)
-                dispatch(setAuthTokenAction(res.data?.data?.access_token))
-                dispatch(setAppLoadingAction(true))
-                //navigate('/')
-            }).catch(e => {
-                statusRegister = true
-                setLoadingState(false)
-                if(e.response !== undefined && e.response.data !== undefined && e.response.data.data !== undefined) {
-                    switch(e.response.status) {
-                        case 422:
-                            validateResponseFromServer(e.response.data?.data)
-                            break
-                        case 401:
-                            setGlobalError(e.response.data?.message)
-                            break
-                        default:
-                            setGlobalError('Error Sign in')
-                    }
+        dispatch(LoginAuthAction(dispatch, data, (res) => {
+            if(res.data !== undefined && res.data !== null) {
+                if(res.data.success) {
+                    setGlobalSuccess(res.data?.message)
+                    setGlobalError('')
+                    navigate('/')
                 } else {
-                    if(statusRegister) navigate('/')
-                    else setGlobalError('Your registration is fail')
+                    setLoadingState(false)
+                    if(res.data !== undefined && res.data !== null) {
+                        switch(res.status) {
+                            case 422:
+                                validateResponseFromServer(res.data)
+                                break
+                            case 401:
+                                setGlobalError(res.data?.message)
+                                break
+                            default:
+                                setGlobalError('Error Sign in')
+                        }
+                    } else {
+                        setGlobalError('Your registration is fail')
+                    }
+
                 }
-            })
+            }
+        }))
     };
 
     const validateResponseFromServer = (data) => {

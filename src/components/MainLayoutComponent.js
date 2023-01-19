@@ -4,7 +4,7 @@ function MainLayoutComponent() {
     return (
       <div className="main_block">
         <div className="header"></div>
-        <Outlet />
+            <Outlet />
         <div className="footer"></div>
       </div> 
     );
