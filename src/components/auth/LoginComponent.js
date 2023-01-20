@@ -1,57 +1,75 @@
-import styles from './Auth.module.css'
-import {Grid, TextField, Container, Button } from '@mui/material'
-import LoadingButton from '@mui/lab/LoadingButton'
-import {Form, useNavigate} from "react-router-dom"
-import { useForm, Controller } from "react-hook-form"
 import { Link } from "react-router-dom"
-import {useState} from "react";
+import { useState } from "react"
 import { useDispatch } from 'react-redux'
-import { loginAuthAction } from "../../store/actions/AuthActions";
+import styles from './Auth.module.css'
+import {
+    Grid,
+    TextField,
+    Container,
+    Button,
+    InputAdornment,
+    IconButton
+} from '@mui/material'
+import {Visibility, VisibilityOff} from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Form, useNavigate } from "react-router-dom"
+import { useForm, Controller } from "react-hook-form"
+import { loginAuthAction } from "../../store/actions/AuthActions"
+import { loginEmailValidation, loginPasswordValidation } from "../../utils/validates/auth/LoginAuthValidate";
 
 function LoginComponent() {
     const dispatch = useDispatch()
-    const { control, register, handleSubmit, setError, formState: { errors } } = useForm({
-      defaultValues: {
-          email: '',
-          password: ''
-      }
+    const navigate = useNavigate();
+    const { control, handleSubmit, setError, formState: { errors } } = useForm({
+        defaultValues: {
+            email: '',
+            password: ''
+        }
     });
 
-    const [globalError, setGlobalError] = useState('')
-    const [globalSuccess, setGlobalSuccess] = useState('')
-    const [loading, setLoadingState] = useState(false)
+    const [process, setProcess] = useState({
+        showPassword: false,
+        loading: false,
+        globalSuccess: '',
+        globalError: ''
+    });
 
-    const navigate = useNavigate();
+    const setProcessToState = (field, value) => {
+        setProcess(prevState => ({
+            ...prevState,
+            [field]: value
+        }))
+    }
 
     const clearConditions = () => {
-        setGlobalSuccess('')
-        setGlobalError('')
+        setProcessToState('globalSuccess', '')
+        setProcessToState('globalError', '')
     }
 
     const onSubmit = data => {
-        setLoadingState(true)
+        setProcessToState('loading', true)
         clearConditions()
         dispatch(loginAuthAction(dispatch, data, (res) => {
             if(res.data !== undefined && res.data !== null) {
                 if(res.data.success) {
-                    setGlobalSuccess(res.data?.message)
-                    setGlobalError('')
-                    navigate('/')
+                    setProcessToState('globalSuccess', res.data?.message)
+                    setProcessToState('loading', false)
+                    //navigate('/')
                 } else {
-                    setLoadingState(false)
+                    setProcessToState('loading', false)
                     if(res.data !== undefined && res.data !== null) {
                         switch(res.status) {
                             case 422:
                                 validateResponseFromServer(res.data?.data)
                                 break
                             case 401:
-                                setGlobalError(res.data?.message)
+                                setProcessToState('globalError', res.data?.message)
                                 break
                             default:
-                                setGlobalError('Error Sign in')
+                                setProcessToState('globalError', 'Error Sign in')
                         }
                     } else {
-                        setGlobalError('Your registration is fail')
+                        setProcessToState('globalError', 'Your registration is fail')
                     }
 
                 }
@@ -60,22 +78,24 @@ function LoginComponent() {
     };
 
     const validateResponseFromServer = (data) => {
-        console.log('data',data)
         if(Object.keys(data).length > 0) {
             for(let item_key in data) {
                 let error_message = ''
                 for(let item_message_key in data[item_key]) {
                     error_message += data[item_key][item_message_key]+' '
                 }
-                console.log(item_key, { type: 'custom', message: error_message })
                 setError(item_key, { type: 'custom', message: error_message })
             }
         }
     }
 
-    const checkErrorHandle = (input) => {
-        return errors[input] !== undefined ? true : false
-    }
+    const handleClickShowPassword = () => {
+        setProcessToState('showPassword', !process.showPassword)
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     return (
       <Container maxWidth="lg">
@@ -93,24 +113,26 @@ function LoginComponent() {
                               <h1>Sign in</h1>
                           </Grid>
 
-                          {globalError !== '' && (
-                              <div className={styles.error}>{globalError}</div>
+                          {process.globalError !== '' && (
+                              <div className={styles.error}>{process.globalError}</div>
                           )}
 
-                          {globalSuccess !== '' && (
-                              <div className={styles.success}>{globalSuccess}</div>
+                          {process.globalSuccess !== '' && (
+                              <div className={styles.success}>{process.globalSuccess}</div>
                           )}
 
                           <Grid item lg={12}>
                               <Controller
-                                  name="email"
+                                  name={"email"}
                                   control={control}
-                                  refs={register("email", { required: "The email is required." })}
+                                  rules={ loginEmailValidation }
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
                                           fullWidth
-                                          error={checkErrorHandle('email')}
+                                          value={field.value}
+                                          onChange={(e) => field.onChange(e)}
+                                          error={!!errors.email?.message}
                                           id="outlined-basic"
                                           helperText={errors.email?.message}
                                           label="Email"
@@ -120,25 +142,36 @@ function LoginComponent() {
                           </Grid>
                           <Grid item lg={12}>
                               <Controller
-                                  name="password"
-                                  control={control}
-                                  refs={register("password", {
-                                      required: "The password is required.",
-                                      minLength: {
-                                          value: 8,
-                                          message: 'Your password must be more then 8 characters'
-                                      }
-                                  })}
+                                  name={"password"}
+                                  control={ control }
+                                  rules={ loginPasswordValidation }
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
                                           fullWidth
-                                          type="password"
-                                          error={checkErrorHandle('password')}
+                                          value={field.value}
+                                          onChange={(e) => field.onChange(e)}
+                                          type={process.showPassword ? 'text' : 'password'}
+                                          error={!!errors.password?.message}
                                           id="outlined-basic"
                                           label="Password"
                                           helperText={errors.password?.message}
-                                          variant="outlined" />
+                                          variant="outlined"
+                                          InputProps={{
+                                              endAdornment: (
+                                                  <InputAdornment position="end">
+                                                      <IconButton
+                                                          aria-label="toggle password visibility"
+                                                          onClick={handleClickShowPassword}
+                                                          onMouseDown={handleMouseDownPassword}
+                                                          edge="end"
+                                                      >
+                                                          {process.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                      </IconButton>
+                                                  </InputAdornment>
+                                              )
+                                          }}
+                                      />
                                     }
                               />
 
@@ -148,7 +181,7 @@ function LoginComponent() {
                                   type="submit"
                                   fullWidth
                                   size="large"
-                                  loading={loading}
+                                  loading={process.loading}
                                   variant="contained"
                               >Submit</LoadingButton>
                           </Grid>

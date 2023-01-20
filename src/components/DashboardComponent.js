@@ -30,7 +30,7 @@ function DashboardComponent() {
               justifyContent="center"
               alignItems="center"
           >
-              <Grid lg={3}>
+              <Grid item lg={3}>
                   <h1>Welcome {authState.user.name} to the Dashboard Page</h1>
                     <LoadingButton
                         onClick={logoutAuthHandle}

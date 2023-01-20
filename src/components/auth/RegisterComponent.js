@@ -126,7 +126,7 @@ function RegisterComponent() {
                                       required: "The email is required.",
                                       pattern: {
                                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                          message: "The email must be a valid email address."
+                                          message: "The email must be a valid."
                                       }
                                   })}
                                   render={({ field }) =>
