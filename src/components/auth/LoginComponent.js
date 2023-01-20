@@ -35,8 +35,8 @@ function LoginComponent() {
     });
 
     const setProcessToState = (field, value) => {
-        setProcess(prevState => ({
-            ...prevState,
+        setProcess(processState => ({
+            ...processState,
             [field]: value
         }))
     }
