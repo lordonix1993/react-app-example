@@ -54,7 +54,7 @@ function LoginComponent() {
                 if(res.data.success) {
                     setProcessToState('globalSuccess', res.data?.message)
                     setProcessToState('loading', false)
-                    //navigate('/')
+                    navigate('/')
                 } else {
                     setProcessToState('loading', false)
                     if(res.data !== undefined && res.data !== null) {
