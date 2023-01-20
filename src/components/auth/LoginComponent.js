@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form"
 import { Link } from "react-router-dom"
 import {useState} from "react";
 import { useDispatch } from 'react-redux'
-import { LoginAuthAction } from "../../store/actions/AuthActions";
+import { loginAuthAction } from "../../store/actions/AuthActions";
 
 function LoginComponent() {
     const dispatch = useDispatch()
@@ -31,7 +31,7 @@ function LoginComponent() {
     const onSubmit = data => {
         setLoadingState(true)
         clearConditions()
-        dispatch(LoginAuthAction(dispatch, data, (res) => {
+        dispatch(loginAuthAction(dispatch, data, (res) => {
             if(res.data !== undefined && res.data !== null) {
                 if(res.data.success) {
                     setGlobalSuccess(res.data?.message)
@@ -42,7 +42,7 @@ function LoginComponent() {
                     if(res.data !== undefined && res.data !== null) {
                         switch(res.status) {
                             case 422:
-                                validateResponseFromServer(res.data)
+                                validateResponseFromServer(res.data?.data)
                                 break
                             case 401:
                                 setGlobalError(res.data?.message)
@@ -60,12 +60,14 @@ function LoginComponent() {
     };
 
     const validateResponseFromServer = (data) => {
+        console.log('data',data)
         if(Object.keys(data).length > 0) {
             for(let item_key in data) {
                 let error_message = ''
                 for(let item_message_key in data[item_key]) {
                     error_message += data[item_key][item_message_key]+' '
                 }
+                console.log(item_key, { type: 'custom', message: error_message })
                 setError(item_key, { type: 'custom', message: error_message })
             }
         }

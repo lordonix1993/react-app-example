@@ -4,8 +4,8 @@ import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
 import {Controller, useForm} from "react-hook-form"
 import { useState } from "react"
-import axios from "axios";
-import {config_main} from "../../config/config";
+import {registerAuthAction} from "../../store/actions/AuthActions";
+import {useDispatch} from "react-redux";
 
 function RegisterComponent() {
     const { control, handleSubmit, register, setError, getValues, clearErrors, formState: { errors } } = useForm({
@@ -18,6 +18,7 @@ function RegisterComponent() {
     });
 
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const [globalError, setGlobalError] = useState('')
     const [globalSuccess, setGlobalSuccess] = useState('')
@@ -44,33 +45,33 @@ function RegisterComponent() {
         setLoadingState(true)
         clearConditions()
         let statusRegister = false
-        axios.post(`${config_main.server_url_v1}/auth/register`, {...data})
-            .then(res => {
-                statusRegister = true
-                setGlobalSuccess(res.data?.message)
-                setGlobalError('')
-                setLoadingState(false)
-                setTimeout(() => {
+        dispatch(registerAuthAction(dispatch, data, (res) => {
+            if(res.data !== undefined && res.data !== null) {
+                if(res.data.success) {
+                    setGlobalSuccess(res.data?.message)
+                    setGlobalError('')
                     navigate('/')
-                }, 1000)
-            }).catch(e => {
-                setLoadingState(false)
-                if(e.response !== undefined && e.response.data !== undefined && e.response.data.data !== undefined) {
-                    switch(e.response.status) {
-                        case 422:
-                            validateResponseFromServer(e.response.data?.data)
-                            break
-                        case 401:
-                            setGlobalError(e.response.data?.message)
-                            break
-                        default:
-                            setGlobalError('Error Sign in')
-                    }
                 } else {
-                    if(statusRegister) navigate('/')
-                    else setGlobalError('Your registration is fail')
+                    setLoadingState(false)
+                    if(res.data !== undefined && res.data !== null) {
+                        switch(res.status) {
+                            case 422:
+                                validateResponseFromServer(res.data)
+                                break
+                            case 401:
+                                setGlobalError(res.data?.message)
+                                break
+                            default:
+                                setGlobalError('Error Sign in')
+                        }
+                    } else {
+                        if(statusRegister) navigate('/')
+                        else setGlobalError('Your registration is fail')
+                    }
+
                 }
-        })
+            }
+        }))
     };
 
     const checkErrorHandle = (input) => {

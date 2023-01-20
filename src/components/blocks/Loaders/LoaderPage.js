@@ -1,6 +1,6 @@
 import {Backdrop, CircularProgress} from "@mui/material";
 
-function LoadingPage({ status }) {
+function LoaderPage({ status }) {
     return (
         <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -10,3 +10,5 @@ function LoadingPage({ status }) {
         </Backdrop>
     )
 }
+
+export default LoaderPage
