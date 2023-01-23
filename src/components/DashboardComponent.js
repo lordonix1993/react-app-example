@@ -15,7 +15,7 @@ function DashboardComponent() {
 
   const logoutAuthHandle = () => {
       setLoadingLogOut(true)
-      dispatch(logoutAuthAction(dispatch, authState.token, (res) => {
+      dispatch(logoutAuthAction(dispatch, (res) => {
           setLoadingLogOut(false)
           navigate('/login')
       }))

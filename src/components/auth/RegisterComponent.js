@@ -2,7 +2,7 @@ import {Button, Container, Grid, TextField} from "@mui/material"
 import {Form, Link, useNavigate} from "react-router-dom"
 import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
-import { Controller, useForm } from "react-hook-form"
+import {Controller, useForm, useFormState} from "react-hook-form"
 import {useState} from "react"
 import {registerAuthAction} from "../../store/actions/AuthActions";
 import {useDispatch} from "react-redux";
@@ -22,6 +22,10 @@ function RegisterComponent() {
             password: '',
             password_confirmation: '',
         }
+    });
+
+    const { touchedFields } = useFormState({
+        control,
     });
 
     const navigate = useNavigate();
@@ -163,7 +167,7 @@ function RegisterComponent() {
                                   rules={ authPasswordValidation() }
                                   render={({ field }) =>
                                       <TextField
-                                          type="text"
+                                          type="password"
                                           {...field}
                                           fullWidth
                                           value={field.value}
@@ -174,7 +178,8 @@ function RegisterComponent() {
                                                   getValues('password_confirmation'),
                                                   setError,
                                                   clearErrors,
-                                                  errors
+                                                  errors,
+                                                  touchedFields
                                               )
                                               return field.onChange(e)
                                           }}
@@ -191,7 +196,7 @@ function RegisterComponent() {
                                   rules={ authPasswordConfirmValidation(getValues) }
                                   render={({ field }) =>
                                       <TextField
-                                          type="text"
+                                          type="password"
                                           {...field}
                                           fullWidth
                                           error={checkErrorHandle('password_confirmation')}

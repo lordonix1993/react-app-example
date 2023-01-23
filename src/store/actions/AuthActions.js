@@ -1,12 +1,12 @@
-import axios from "axios";
-import {config_main} from "../../config/config";
-import {setAuthTokenAction, setAuthUserDataAction} from "../auth/AuthSlice";
+import { https } from "../../libs/https";
+import { config_main } from "../../config/main";
+import { setAuthUserDataAction } from "../auth/AuthSlice";
 
 export const loginAuthAction = (dispatch, data, cb = () => {}) => {
     return (dispatch) => {
-        axios.post(`${config_main.server_url_v1}/auth/login`, {...data})
+        https.post(`/auth/login`, {...data})
             .then(res => {
-                dispatch(setAuthTokenAction(res.data?.data?.access_token))
+                localStorage.setItem('access_token', res.data?.data?.access_token)
                 dispatch(setAuthUserDataAction(res.data?.data?.user))
                 cb(res)
             }).catch(e => {
@@ -21,9 +21,9 @@ export const loginAuthAction = (dispatch, data, cb = () => {}) => {
 
 export const registerAuthAction = (dispatch, data, cb = () => {}) => {
     return (dispatch) => {
-        axios.post(`${config_main.server_url_v1}/auth/register`, {...data})
+        https.post(`/auth/register`, {...data})
             .then(res => {
-                dispatch(setAuthTokenAction(res.data?.data?.access_token))
+                localStorage.setItem('access_token', res.data?.data?.access_token)
                 dispatch(setAuthUserDataAction(res.data?.data?.user))
                 cb(res)
             }).catch(e => {
@@ -40,11 +40,7 @@ export const checkAuthAction = (dispatch, token, cb = () => {}) => {
     return async (dispatch) => {
         if(token) {
             try {
-                const res = await axios.post(`${config_main.server_url_v1}/auth/me`, {}, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
+                const res = await https.post(`/auth/me`, {})
                 dispatch(setAuthUserDataAction(res.data?.data))
                 cb(res.data?.success)
             } catch(e) {
@@ -57,23 +53,17 @@ export const checkAuthAction = (dispatch, token, cb = () => {}) => {
     }
 }
 
-export const logoutAuthAction = (dispatch, token, cb = () => {}) => {
+export const logoutAuthAction = (dispatch, cb = () => {}) => {
     return async (dispatch) => {
-        if(token) {
-            try {
-                await axios.post(`${config_main.server_url_v1}/auth/logout`, {}, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-            } catch(e) {}
-        }
+        try {
+            await https.post(`${config_main.server_url_v1}/auth/logout`, {})
+        } catch(e) {}
         clearAuthStorage(dispatch)
         cb(true)
     }
 }
 
 const clearAuthStorage = (dispatch) => {
-    dispatch(setAuthTokenAction(''))
+    localStorage.removeItem('access_token')
     dispatch(setAuthUserDataAction({}))
 }

@@ -38,19 +38,23 @@ export const authPasswordConfirmValidation = (getValues) => {
     }
 }
 
-export const authCheckPasswordWithConfirm = (pass, confirm_pass, setError, clearErrors, errors) => {
+export const authCheckPasswordWithConfirm = (pass, confirm_pass, setError, clearErrors, errors, touchedFields) => {
     if(
         (errors.password_confirmation === undefined) ||
-        (errors.password_confirmation?.type !== undefined &&
-            errors.password_confirmation?.type === 'confirm_password')
+        (
+            errors.password_confirmation?.type !== undefined &&
+            errors.password_confirmation?.type === 'confirm_password'
+        )
     ) {
         if (confirm_pass === pass) {
             clearErrors(['password_confirmation'])
         } else {
-            setError('password_confirmation', {
-                type: 'confirm_password',
-                message: 'The confirm password is not equals with password'
-            })
+            if(touchedFields.password_confirmation !== undefined && touchedFields.password_confirmation === true) {
+                setError('password_confirmation', {
+                    type: 'confirm_password',
+                    message: 'The confirm password is not equals with password'
+                })
+            }
         }
     }
 }
