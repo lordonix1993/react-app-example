@@ -2,13 +2,18 @@ import {Button, Container, Grid, TextField} from "@mui/material"
 import {Form, Link, useNavigate} from "react-router-dom"
 import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
-import {Controller, useForm} from "react-hook-form"
-import { useState } from "react"
+import {Controller, useForm, useFormState} from "react-hook-form"
+import {useState} from "react"
 import {registerAuthAction} from "../../store/actions/AuthActions";
 import {useDispatch} from "react-redux";
+import {
+    authEmailValidation,
+    authPasswordValidation,
+    authNameValidation, authPasswordConfirmValidation, authCheckPasswordWithConfirm
+} from "../../utils/validates/auth/LoginAuthValidate";
 
 function RegisterComponent() {
-    const { control, handleSubmit, register, setError, getValues, clearErrors, formState: { errors } } = useForm({
+    const { control, handleSubmit, setError, getValues, clearErrors, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
             email: '',
@@ -104,15 +109,17 @@ function RegisterComponent() {
 
                           <Grid item lg={12}>
                               <Controller
-                                  name="name"
-                                  refs={register("name", { required: "The name is required." })}
+                                  name={"name"}
+                                  rules={authNameValidation}
                                   control={control}
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
                                           fullWidth
                                           id="outlined-basic"
+                                          value={field.value}
                                           error={checkErrorHandle('name')}
+                                          onChange={(e) => field.onChange(e)}
                                           label="Name"
                                           helperText={errors.name?.message}
                                           variant="outlined" />}
@@ -120,49 +127,45 @@ function RegisterComponent() {
                           </Grid>
                           <Grid item lg={12}>
                               <Controller
-                                  name="email"
+                                  name={"email"}
                                   control={control}
-                                  refs={register("email", {
-                                      required: "The email is required.",
-                                      pattern: {
-                                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                          message: "The email must be a valid."
-                                      }
-                                  })}
+                                  rules={ authEmailValidation() }
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
                                           fullWidth
+                                          value={field.value}
+                                          onChange={(e) => field.onChange(e)}
+                                          error={!!errors.email?.message}
                                           id="outlined-basic"
-                                          error={checkErrorHandle('email')}
-                                          label="Email"
                                           helperText={errors.email?.message}
-                                          variant="outlined" />}
+                                          label="Email"
+                                          variant="outlined" />
+                                  }
                               />
                           </Grid>
                           <Grid item lg={12}>
                               <Controller
                                   name="password"
                                   control={control}
-                                  refs={register("password", {
-                                      required: "The password is required.",
-                                      minLength: {
-                                          value: 8,
-                                          message: 'Your password must be more then 8 characters'
-                                      },
-                                      onChange: (e) => {
-                                          const password_confirmation = getValues('password_confirmation')
-                                          if(password_confirmation === e.target.value) {
-                                              clearErrors(['password_confirmation'])
-                                          }
-                                      }
-                                  })}
+                                  rules={ authPasswordValidation() }
                                   render={({ field }) =>
                                       <TextField
-                                          type="password"
+                                          type="text"
                                           {...field}
                                           fullWidth
+                                          value={field.value}
                                           id="outlined-basic"
+                                          onChange={(e) => {
+                                              authCheckPasswordWithConfirm(
+                                                  e.target?.value,
+                                                  getValues('password_confirmation'),
+                                                  setError,
+                                                  clearErrors,
+                                                  errors
+                                              )
+                                              return field.onChange(e)
+                                          }}
                                           error={checkErrorHandle('password')}
                                           label="Password"
                                           helperText={errors.password?.message}
@@ -173,25 +176,10 @@ function RegisterComponent() {
                               <Controller
                                   name="password_confirmation"
                                   control={control}
-                                  refs={register("password_confirmation", {
-                                      required: "The password confirm is required.",
-                                      minLength: {
-                                          value: 8,
-                                          message: 'Your password must be more then 8 characters'
-                                      },
-                                      validate: {
-                                          confirm_password: pass => {
-                                              const password_value = getValues('password')
-                                              if(password_value === pass) {
-                                                  return true
-                                              }
-                                              return 'The confirm password is not equals with password'
-                                          }
-                                      }
-                                  })}
+                                  rules={ authPasswordConfirmValidation(getValues) }
                                   render={({ field }) =>
                                       <TextField
-                                          type="password"
+                                          type="text"
                                           {...field}
                                           fullWidth
                                           error={checkErrorHandle('password_confirmation')}

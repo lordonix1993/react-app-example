@@ -15,7 +15,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { Form, useNavigate } from "react-router-dom"
 import { useForm, Controller } from "react-hook-form"
 import { loginAuthAction } from "../../store/actions/AuthActions"
-import { loginEmailValidation, loginPasswordValidation } from "../../utils/validates/auth/LoginAuthValidate";
+import { authEmailValidation, authPasswordValidation } from "../../utils/validates/auth/LoginAuthValidate";
 
 function LoginComponent() {
     const dispatch = useDispatch()
@@ -125,7 +125,7 @@ function LoginComponent() {
                               <Controller
                                   name={"email"}
                                   control={control}
-                                  rules={ loginEmailValidation }
+                                  rules={ authEmailValidation() }
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
@@ -144,7 +144,7 @@ function LoginComponent() {
                               <Controller
                                   name={"password"}
                                   control={ control }
-                                  rules={ loginPasswordValidation }
+                                  rules={ authPasswordValidation() }
                                   render={({ field }) =>
                                       <TextField
                                           {...field}
