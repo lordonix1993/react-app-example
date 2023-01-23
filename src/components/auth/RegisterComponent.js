@@ -2,14 +2,16 @@ import {Button, Container, Grid, TextField} from "@mui/material"
 import {Form, Link, useNavigate} from "react-router-dom"
 import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
-import {Controller, useForm, useFormState} from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import {useState} from "react"
 import {registerAuthAction} from "../../store/actions/AuthActions";
 import {useDispatch} from "react-redux";
 import {
     authEmailValidation,
     authPasswordValidation,
-    authNameValidation, authPasswordConfirmValidation, authCheckPasswordWithConfirm
+    authNameValidation,
+    authPasswordConfirmValidation,
+    authCheckPasswordWithConfirm
 } from "../../utils/validates/auth/LoginAuthValidate";
 
 function RegisterComponent() {
@@ -25,13 +27,23 @@ function RegisterComponent() {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
-    const [globalError, setGlobalError] = useState('')
-    const [globalSuccess, setGlobalSuccess] = useState('')
-    const [loading, setLoadingState] = useState(false)
+    const [process, setProcess] = useState({
+        showPassword: false,
+        loading: false,
+        globalSuccess: '',
+        globalError: ''
+    });
+
+    const setProcessToState = (field, value) => {
+        setProcess(processState => ({
+            ...processState,
+            [field]: value
+        }))
+    }
 
     const clearConditions = () => {
-        setGlobalSuccess('')
-        setGlobalError('')
+        setProcessToState('globalSuccess', '')
+        setProcessToState('globalError', '')
     }
 
     const validateResponseFromServer = (data) => {
@@ -47,31 +59,31 @@ function RegisterComponent() {
     }
 
     const onSubmit = data => {
-        setLoadingState(true)
+        setProcessToState('loading', true)
         clearConditions()
         let statusRegister = false
         dispatch(registerAuthAction(dispatch, data, (res) => {
             if(res.data !== undefined && res.data !== null) {
                 if(res.data.success) {
-                    setGlobalSuccess(res.data?.message)
-                    setGlobalError('')
+                    setProcessToState('globalSuccess', res.data?.message)
+                    setProcessToState('globalError', '')
                     navigate('/')
                 } else {
-                    setLoadingState(false)
+                    setProcessToState('loading', false)
                     if(res.data !== undefined && res.data !== null) {
                         switch(res.status) {
                             case 422:
                                 validateResponseFromServer(res.data)
                                 break
                             case 401:
-                                setGlobalError(res.data?.message)
+                                setProcessToState('globalError', res.data?.message)
                                 break
                             default:
-                                setGlobalError('Error Sign in')
+                                setProcessToState('globalError', 'Error registration')
                         }
                     } else {
                         if(statusRegister) navigate('/')
-                        else setGlobalError('Your registration is fail')
+                        else  setProcessToState('globalError', 'Your registration is fail')
                     }
 
                 }
@@ -99,18 +111,18 @@ function RegisterComponent() {
                               <h1>Sign Up</h1>
                           </Grid>
 
-                          {globalError !== '' && (
-                              <div className={styles.error}>{globalError}</div>
+                          {process.globalError !== '' && (
+                              <div className={styles.error}>{ process.globalError }</div>
                           )}
 
-                          {globalSuccess !== '' && (
-                              <div className={styles.success}>{globalSuccess}</div>
+                          {process.globalSuccess !== '' && (
+                              <div className={styles.success}>{ process.globalSuccess }</div>
                           )}
 
                           <Grid item lg={12}>
                               <Controller
                                   name={"name"}
-                                  rules={authNameValidation}
+                                  rules={ authNameValidation() }
                                   control={control}
                                   render={({ field }) =>
                                       <TextField
@@ -193,7 +205,7 @@ function RegisterComponent() {
                               <LoadingButton
                                   type="submit"
                                   fullWidth={true}
-                                  loading={loading}
+                                  loading={ process.loading }
                                   variant="contained"
                               >Submit</LoadingButton>
                           </Grid>

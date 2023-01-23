@@ -69,7 +69,7 @@ function LoginComponent() {
                                 setProcessToState('globalError', 'Error Sign in')
                         }
                     } else {
-                        setProcessToState('globalError', 'Your registration is fail')
+                        setProcessToState('globalError', 'Your authorization is fail')
                     }
 
                 }
@@ -123,8 +123,8 @@ function LoginComponent() {
 
                           <Grid item lg={12}>
                               <Controller
-                                  name={"email"}
-                                  control={control}
+                                  name={ "email" }
+                                  control={ control }
                                   rules={ authEmailValidation() }
                                   render={({ field }) =>
                                       <TextField
@@ -142,7 +142,7 @@ function LoginComponent() {
                           </Grid>
                           <Grid item lg={12}>
                               <Controller
-                                  name={"password"}
+                                  name={ "password" }
                                   control={ control }
                                   rules={ authPasswordValidation() }
                                   render={({ field }) =>
