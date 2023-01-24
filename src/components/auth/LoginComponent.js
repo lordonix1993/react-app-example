@@ -16,6 +16,7 @@ import { Form, useNavigate } from "react-router-dom"
 import { useForm, Controller } from "react-hook-form"
 import { loginAuthAction } from "../../store/actions/AuthActions"
 import { authEmailValidation, authPasswordValidation } from "../../utils/validates/auth/LoginAuthValidate";
+import AuthWrapComponent from "./AuthWrapComponent";
 
 function LoginComponent() {
     const dispatch = useDispatch()
@@ -54,7 +55,7 @@ function LoginComponent() {
                 if(res.data.success) {
                     setProcessToState('globalSuccess', res.data?.message)
                     setProcessToState('loading', false)
-                    navigate('/')
+                    navigate('/', { replace: true })
                 } else {
                     setProcessToState('loading', false)
                     if(res.data !== undefined && res.data !== null) {
@@ -98,103 +99,105 @@ function LoginComponent() {
     };
 
     return (
-      <Container maxWidth="lg">
-          <Grid container>
-              <Form onSubmit={handleSubmit(onSubmit)} className={styles.authGridContainer}>
-                  <Grid item lg={3}>
-                      <Grid
-                          rowSpacing={2}
-                          container
-                          direction="row"
-                          justifyContent="center"
-                          alignItems="center"
-                      >
-                          <Grid item lg={12}>
-                              <h1>Sign in</h1>
-                          </Grid>
+      <AuthWrapComponent>
+          <Container maxWidth="lg">
+              <Grid container>
+                  <Form onSubmit={handleSubmit(onSubmit)} className={styles.authGridContainer}>
+                      <Grid item lg={3}>
+                          <Grid
+                              rowSpacing={2}
+                              container
+                              direction="row"
+                              justifyContent="center"
+                              alignItems="center"
+                          >
+                              <Grid item lg={12}>
+                                  <h1>Sign in</h1>
+                              </Grid>
 
-                          {process.globalError !== '' && (
-                              <div className={styles.error}>{process.globalError}</div>
-                          )}
+                              {process.globalError !== '' && (
+                                  <div className={styles.error}>{process.globalError}</div>
+                              )}
 
-                          {process.globalSuccess !== '' && (
-                              <div className={styles.success}>{process.globalSuccess}</div>
-                          )}
+                              {process.globalSuccess !== '' && (
+                                  <div className={styles.success}>{process.globalSuccess}</div>
+                              )}
 
-                          <Grid item lg={12}>
-                              <Controller
-                                  name={ "email" }
-                                  control={ control }
-                                  rules={ authEmailValidation() }
-                                  render={({ field }) =>
-                                      <TextField
-                                          {...field}
-                                          fullWidth
-                                          value={field.value}
-                                          onChange={(e) => field.onChange(e)}
-                                          error={!!errors.email?.message}
-                                          id="outlined-basic"
-                                          helperText={errors.email?.message}
-                                          label="Email"
-                                          variant="outlined" />
-                                    }
-                              />
-                          </Grid>
-                          <Grid item lg={12}>
-                              <Controller
-                                  name={ "password" }
-                                  control={ control }
-                                  rules={ authPasswordValidation() }
-                                  render={({ field }) =>
-                                      <TextField
-                                          {...field}
-                                          fullWidth
-                                          value={field.value}
-                                          onChange={(e) => field.onChange(e)}
-                                          type={process.showPassword ? 'text' : 'password'}
-                                          error={!!errors.password?.message}
-                                          id="outlined-basic"
-                                          label="Password"
-                                          helperText={errors.password?.message}
-                                          variant="outlined"
-                                          InputProps={{
-                                              endAdornment: (
-                                                  <InputAdornment position="end">
-                                                      <IconButton
-                                                          aria-label="toggle password visibility"
-                                                          onClick={handleClickShowPassword}
-                                                          onMouseDown={handleMouseDownPassword}
-                                                          edge="end"
-                                                      >
-                                                          {process.showPassword ? <VisibilityOff /> : <Visibility />}
-                                                      </IconButton>
-                                                  </InputAdornment>
-                                              )
-                                          }}
-                                      />
-                                    }
-                              />
+                              <Grid item lg={12}>
+                                  <Controller
+                                      name={ "email" }
+                                      control={ control }
+                                      rules={ authEmailValidation() }
+                                      render={({ field }) =>
+                                          <TextField
+                                              {...field}
+                                              fullWidth
+                                              value={field.value}
+                                              onChange={(e) => field.onChange(e)}
+                                              error={!!errors.email?.message}
+                                              id="outlined-basic"
+                                              helperText={errors.email?.message}
+                                              label="Email"
+                                              variant="outlined" />
+                                        }
+                                  />
+                              </Grid>
+                              <Grid item lg={12}>
+                                  <Controller
+                                      name={ "password" }
+                                      control={ control }
+                                      rules={ authPasswordValidation() }
+                                      render={({ field }) =>
+                                          <TextField
+                                              {...field}
+                                              fullWidth
+                                              value={field.value}
+                                              onChange={(e) => field.onChange(e)}
+                                              type={process.showPassword ? 'text' : 'password'}
+                                              error={!!errors.password?.message}
+                                              id="outlined-basic"
+                                              label="Password"
+                                              helperText={errors.password?.message}
+                                              variant="outlined"
+                                              InputProps={{
+                                                  endAdornment: (
+                                                      <InputAdornment position="end">
+                                                          <IconButton
+                                                              aria-label="toggle password visibility"
+                                                              onClick={handleClickShowPassword}
+                                                              onMouseDown={handleMouseDownPassword}
+                                                              edge="end"
+                                                          >
+                                                              {process.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                          </IconButton>
+                                                      </InputAdornment>
+                                                  )
+                                              }}
+                                          />
+                                        }
+                                  />
 
-                          </Grid>
-                          <Grid item lg={12}>
-                              <LoadingButton
-                                  type="submit"
-                                  fullWidth
-                                  size="large"
-                                  loading={process.loading}
-                                  variant="contained"
-                              >Submit</LoadingButton>
-                          </Grid>
-                          <Grid item lg={12}>
-                              <Button variant="outlined" fullWidth>
-                                  <Link to='/register'>Registration</Link>
-                              </Button>
+                              </Grid>
+                              <Grid item lg={12}>
+                                  <LoadingButton
+                                      type="submit"
+                                      fullWidth
+                                      size="large"
+                                      loading={process.loading}
+                                      variant="contained"
+                                  >Submit</LoadingButton>
+                              </Grid>
+                              <Grid item lg={12}>
+                                  <Button variant="outlined" fullWidth>
+                                      <Link to='/register'>Registration</Link>
+                                  </Button>
+                              </Grid>
                           </Grid>
                       </Grid>
-                  </Grid>
-              </Form>
-          </Grid>
-      </Container>
+                  </Form>
+              </Grid>
+          </Container>
+      </AuthWrapComponent>
     );
 }
 

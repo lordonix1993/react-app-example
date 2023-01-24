@@ -1,10 +1,10 @@
-import { https } from "../../libs/https";
+import { http } from "../../libs/http";
 import { config_main } from "../../config/main";
 import { setAuthUserDataAction } from "../auth/AuthSlice";
 
 export const loginAuthAction = (dispatch, data, cb = () => {}) => {
     return (dispatch) => {
-        https.post(`/auth/login`, {...data})
+        http.post(`/auth/login`, {...data})
             .then(res => {
                 localStorage.setItem('access_token', res.data?.data?.access_token)
                 dispatch(setAuthUserDataAction(res.data?.data?.user))
@@ -21,7 +21,7 @@ export const loginAuthAction = (dispatch, data, cb = () => {}) => {
 
 export const registerAuthAction = (dispatch, data, cb = () => {}) => {
     return (dispatch) => {
-        https.post(`/auth/register`, {...data})
+        http.post(`/auth/register`, {...data})
             .then(res => {
                 localStorage.setItem('access_token', res.data?.data?.access_token)
                 dispatch(setAuthUserDataAction(res.data?.data?.user))
@@ -36,19 +36,15 @@ export const registerAuthAction = (dispatch, data, cb = () => {}) => {
     }
 }
 
-export const checkAuthAction = (dispatch, token, cb = () => {}) => {
+export const checkAuthAction = (dispatch, cb = () => {}) => {
     return async (dispatch) => {
-        if(token) {
-            try {
-                const res = await https.post(`/auth/me`, {})
-                dispatch(setAuthUserDataAction(res.data?.data))
-                cb(res.data?.success)
-            } catch(e) {
-                clearAuthStorage(dispatch)
-                cb(e.data?.success)
-            }
-        } else {
-            cb(false)
+        try {
+            const res = await http.post(`/auth/me`, {})
+            dispatch(setAuthUserDataAction(res.data?.data))
+            cb(res.data?.success)
+        } catch(e) {
+            clearAuthStorage(dispatch)
+            cb(e.data?.success)
         }
     }
 }
@@ -56,7 +52,7 @@ export const checkAuthAction = (dispatch, token, cb = () => {}) => {
 export const logoutAuthAction = (dispatch, cb = () => {}) => {
     return async (dispatch) => {
         try {
-            await https.post(`${config_main.server_url_v1}/auth/logout`, {})
+            await http.post(`${config_main.server_url_v1}/auth/logout`, {})
         } catch(e) {}
         clearAuthStorage(dispatch)
         cb(true)
