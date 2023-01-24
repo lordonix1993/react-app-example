@@ -1,5 +1,5 @@
 import {Button, Container, Grid, IconButton, InputAdornment, TextField} from "@mui/material"
-import {Form, Link, useNavigate} from "react-router-dom"
+import {Form, Link, useLocation, useNavigate} from "react-router-dom"
 import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
 import {Controller, useForm, useFormState} from "react-hook-form"
@@ -32,6 +32,7 @@ function RegisterComponent() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const location = useLocation()
 
     const [process, setProcess] = useState({
         showPassword: false,
@@ -74,7 +75,7 @@ function RegisterComponent() {
                 if(res.data.success) {
                     setProcessToState('globalSuccess', res.data?.message)
                     setProcessToState('globalError', '')
-                    navigate('/')
+                    navigate('/', {state: {from: location}})
                 } else {
                     setProcessToState('loading', false)
                     if(res.data !== undefined && res.data !== null) {

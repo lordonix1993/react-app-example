@@ -6,6 +6,7 @@ import App from '../App';
 import MainLayoutComponent from "../components/MainLayoutComponent";
 import DashboardComponent from "../components/DashboardComponent";
 import CheckAuthMiddleware from "../middlewares/CheckAuthMiddleware";
+import CreativesComponent from "../components/CreativesComponent";
 
 const router = createBrowserRouter([
     {
@@ -15,11 +16,15 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <MainLayoutComponent />,
+                element: <CheckAuthMiddleware><MainLayoutComponent /></CheckAuthMiddleware>,
                 children: [
                     {
                       path: "/",
-                      element: <CheckAuthMiddleware><DashboardComponent /></CheckAuthMiddleware>,
+                      element: <DashboardComponent />,
+                    },
+                    {
+                        path: "/new",
+                        element: <CreativesComponent />,
                     },
                   ],
             },

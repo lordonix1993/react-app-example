@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 
-function DashboardComponent() {
+function CreativesComponent() {
   const authState = useSelector(state => state.auth)
 
   return (
@@ -16,12 +16,12 @@ function DashboardComponent() {
               alignItems="center"
           >
               <Grid item lg={3}>
-                  <h1>Welcome {authState.user.name} to the Dashboard Page</h1>
-                  <Link to={'/new'}>To the Creatives Page</Link>
+                  <h1>Welcome  {authState.user.name} to the Creatives Page</h1>
+                  <Link to={'/'}>To the Dashboard Page</Link>
               </Grid>
             </Grid>
       </Container>
   );
 }
 
-export default DashboardComponent;
+export default CreativesComponent;

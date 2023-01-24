@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import {Link, useLocation} from "react-router-dom"
 import { useState } from "react"
 import { useDispatch } from 'react-redux'
 import styles from './Auth.module.css'
@@ -21,6 +21,7 @@ import AuthWrapComponent from "./AuthWrapComponent";
 function LoginComponent() {
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    const location = useLocation()
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         defaultValues: {
             email: '',
@@ -55,7 +56,11 @@ function LoginComponent() {
                 if(res.data.success) {
                     setProcessToState('globalSuccess', res.data?.message)
                     setProcessToState('loading', false)
-                    navigate('/', { replace: true })
+                    let path_redirect = '/'
+                    if(location.state?.from?.pathname !== undefined && location.state?.from?.pathname !== null) {
+                        path_redirect = location.state?.from?.pathname
+                    }
+                    navigate(path_redirect, {state: {from: location}})
                 } else {
                     setProcessToState('loading', false)
                     if(res.data !== undefined && res.data !== null) {
