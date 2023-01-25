@@ -17,7 +17,7 @@ function DashboardComponent() {
           >
               <Grid item lg={3}>
                   <h1>Welcome {authState.user.name} to the Dashboard Page</h1>
-                  <Link to={'/new'}>To the Creatives Page</Link>
+                  <Link to={'/creatives'}>To the Creatives Page</Link>
               </Grid>
             </Grid>
       </Container>

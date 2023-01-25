@@ -81,7 +81,7 @@ function LoginComponent() {
                 }
             }
         }))
-    };
+    }
 
     const validateResponseFromServer = (data) => {
         if(Object.keys(data).length > 0) {

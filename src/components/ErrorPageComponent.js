@@ -1,11 +1,10 @@
 import { useRouteError, Link } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import theme from './libs/theme';
+import theme from '../libs/theme';
 
-function ErrorPage() {
+function ErrorPageComponent() {
   const error = useRouteError();
-  console.error(error);
 
   return (
     <ThemeProvider theme={theme}>
@@ -24,4 +23,4 @@ function ErrorPage() {
   );
 }
 
-export default ErrorPage;
+export default ErrorPageComponent;

@@ -24,4 +24,4 @@ function CreativesComponent() {
   );
 }
 
-export default CreativesComponent;
+export default CreativesComponent

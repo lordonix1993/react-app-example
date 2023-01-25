@@ -14,7 +14,17 @@ http.interceptors.request.use(
         return config;
     },
     function (error) {
-        // Do something with request error
+        return Promise.reject(error);
+    }
+);
+
+http.interceptors.response.use(
+    function (response) {
+        return response;
+    },
+    function (error) {
+        const error_codes = ["ERR_NETWORK", "ERR_BAD_RESPONSE"]
+        if(error_codes.includes(error.code)) return window.location.href = '/server-error'
         return Promise.reject(error);
     }
 );

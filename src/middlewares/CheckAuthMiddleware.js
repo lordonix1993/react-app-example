@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoaderPage from "../components/blocks/Loaders/LoaderPage";
 import { checkAuthAction } from "../store/actions/AuthActions";
 
@@ -18,7 +18,7 @@ function CheckAuthMiddleware({ children }) {
             (location.state?.from?.pathname === '/login' || location.state?.from?.pathname === '/register')
         ) {
             setAuthState(true)
-            navigate(location.pathname, { replace: true })
+            window.history.replaceState({}, document.title)
         } else {
             setAuthState(false)
             dispatch(checkAuthAction(dispatch, (status) => {
