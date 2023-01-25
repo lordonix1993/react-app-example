@@ -4,6 +4,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { checkAuthAction, logoutAuthAction } from "../../store/actions/AuthActions";
 import { useDispatch } from "react-redux";
 import { Grid } from "@mui/material";
+import HeaderBlockComponent from "../blocks/HeaderBlockComponent";
+import FooterBlockComponent from "../blocks/FooterBlockComponent";
 
 function AuthWrapComponent({ children }) {
     const [ process, setProcess ] = useState({
@@ -42,6 +44,7 @@ function AuthWrapComponent({ children }) {
 
     return (
         <>
+            <HeaderBlockComponent showLogOut={process.authStatus} />
             {process.progressStatus && !process.authStatus &&
                 <>{ children }</>
             }
@@ -64,6 +67,7 @@ function AuthWrapComponent({ children }) {
                     </Grid>
                 </Grid>
             }
+            <FooterBlockComponent />
             <LoaderPage status={!process.progressStatus} />
         </>
     )
