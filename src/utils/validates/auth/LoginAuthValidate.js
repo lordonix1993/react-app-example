@@ -1,44 +1,48 @@
-export const authNameValidation = () => {
+export const authNameValidation = (t) => {
     return {
-        required: "The field is required."
+        required: t('auth.validation.name.required')
     }
 }
 
-export const authEmailValidation = () => {
+export const authEmailValidation = (t) => {
     return {
-        required: "This field is required.",
-            validate: (value) => isValidEmail(value) ? true : "Invalid email."
+        required: t('auth.validation.email.required'),
+        validate: (value) => isValidEmail(value) ? true : t('auth.validation.email.validate')
     }
 }
 
-export const authPasswordValidation = () => {
+export const authPasswordValidation = (t) => {
     return {
-        required: "This field is required.",
+        required: t('auth.validation.password.required'),
         maxLength: {
             value: 20,
-            message: "The password may not be greater than 20."
+            message: t('auth.validation.password.max_length', {length: 20})
         },
         minLength: {
             value: 8,
-            message: "The password must be at least 8."
+            message: t('auth.validation.password.min_length', {length: 8})
         }
     }
 }
 
-export const authPasswordConfirmValidation = (getValues) => {
+export const authPasswordConfirmValidation = (getValues, t) => {
     return {
         required: "The password confirm is required.",
+        maxLength: {
+            value: 20,
+            message: t('auth.validation.password_confirmation.max_length', {length: 20})
+        },
         minLength: {
             value: 8,
-            message: 'Your password must be more then 8 characters'
+            message: t('auth.validation.password_confirmation.min_length', {length: 8})
         },
         validate: {
-            confirm_password: pass_confirm => getValues('password') === pass_confirm || 'The confirm password is not equals with password'
+            confirm_password: pass_confirm => getValues('password') === pass_confirm || t('auth.validation.password_confirmation.validate')
         }
     }
 }
 
-export const authCheckPasswordWithConfirm = (pass, confirm_pass, setError, clearErrors, errors, touchedFields) => {
+export const authCheckPasswordWithConfirm = (pass, confirm_pass, setError, clearErrors, errors, touchedFields, t) => {
     if(
         (errors.password_confirmation === undefined) ||
         (
@@ -52,7 +56,7 @@ export const authCheckPasswordWithConfirm = (pass, confirm_pass, setError, clear
             if(touchedFields.password_confirmation !== undefined && touchedFields.password_confirmation === true) {
                 setError('password_confirmation', {
                     type: 'confirm_password',
-                    message: 'The confirm password is not equals with password'
+                    message: t('auth.validation.password_confirmation.validate_with_pass')
                 })
             }
         }

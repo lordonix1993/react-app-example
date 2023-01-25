@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoaderPage from "../components/blocks/Loaders/LoaderPage";
+import LoaderPage from "../components/elements/LoaderPage";
 import { checkAuthAction } from "../store/actions/AuthActions";
 
 function CheckAuthMiddleware({ children }) {

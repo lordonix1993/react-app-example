@@ -1,4 +1,4 @@
-import LoaderPage from "../blocks/Loaders/LoaderPage";
+import LoaderPage from "../elements/LoaderPage";
 import { useEffect, useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { checkAuthAction, logoutAuthAction } from "../../store/actions/AuthActions";

@@ -1,7 +1,67 @@
 {
   "auth": {
     "button": {
-      "logout": "Log out"
+      "logout": "Log out",
+      "sign_in": "Submit",
+      "sign_up": "Submit"
+    },
+    "validation": {
+      "email": {
+        "required": "This field is required.",
+        "validate": "Invalid email."
+      },
+      "name": {
+        "required": "The field is required."
+      },
+      "password": {
+        "required": "The field is required.",
+        "max_length": "The password may not be greater than {{length}}.",
+        "min_length": "The password must be at least {{length}}."
+      },
+      "password_confirmation": {
+        "required": "The field is required.",
+        "max_length": "The password may not be greater than {{length}}.",
+        "min_length": "The password must be at least {{length}}.",
+        "validate": "The confirm password is not equals with password",
+        "validate_with_pass": "The confirm password is not equals with password"
+      }
+    },
+    "link": {
+      "to_sign_up": "Registration",
+      "to_sign_in": "Sign In"
+    },
+    "title": {
+      "sign_in": "Sign In",
+      "sign_up": "Sign Up"
+    },
+    "field": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "password_confirm": "Password Confirm"
+    },
+    "error": {
+      "sign_in": {
+        "default_status": "Error Sign In",
+        "global_error": "Your authorization is fail"
+      },
+      "sign_up": {
+        "default_status": "Error Sign Up",
+        "global_error": "Your registration is fail"
+      }
     }
+  },
+  "common": {
+    "language": "Language"
+  },
+  "creatives": {
+    "welcome": "Welcome {{userName}} to the Creative Page"
+  },
+  "dashboard": {
+    "welcome": "Welcome {{userName}} to the Dashboard Page"
+  },
+  "link": {
+    "to_creatives": "To the Creatives Page",
+    "to_dashboard": "To the Dashboard Page"
   }
 }

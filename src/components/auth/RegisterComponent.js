@@ -15,6 +15,7 @@ import {
 } from "../../utils/validates/auth/LoginAuthValidate";
 import AuthWrapComponent from "./AuthWrapComponent";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {useTranslation} from "react-i18next";
 
 function RegisterComponent() {
     const { control, handleSubmit, setError, getValues, clearErrors, formState: { errors } } = useForm({
@@ -25,6 +26,7 @@ function RegisterComponent() {
             password_confirmation: '',
         }
     });
+    const { t } = useTranslation()
 
     const { touchedFields } = useFormState({
         control,
@@ -87,11 +89,11 @@ function RegisterComponent() {
                                 setProcessToState('globalError', res.data?.message)
                                 break
                             default:
-                                setProcessToState('globalError', 'Error registration')
+                                setProcessToState('globalError', t('auth.error.sign_up.default_status'))
                         }
                     } else {
                         if(statusRegister) navigate('/')
-                        else  setProcessToState('globalError', 'Your registration is fail')
+                        else  setProcessToState('globalError', t('auth.error.sign_up.global_error'))
                     }
 
                 }
@@ -129,7 +131,7 @@ function RegisterComponent() {
                               alignItems="center"
                           >
                               <Grid item lg={12}>
-                                  <h1>Sign Up</h1>
+                                  <h1>{ t('auth.title.sign_up') }</h1>
                               </Grid>
 
                               {process.globalError !== '' && (
@@ -143,7 +145,7 @@ function RegisterComponent() {
                               <Grid item lg={12}>
                                   <Controller
                                       name={"name"}
-                                      rules={ authNameValidation() }
+                                      rules={ authNameValidation(t) }
                                       control={control}
                                       render={({ field }) =>
                                           <TextField
@@ -153,7 +155,7 @@ function RegisterComponent() {
                                               value={field.value}
                                               error={checkErrorHandle('name')}
                                               onChange={(e) => field.onChange(e)}
-                                              label="Name"
+                                              label={t('auth.field.name')}
                                               helperText={errors.name?.message}
                                               variant="outlined" />}
                                   />
@@ -162,7 +164,7 @@ function RegisterComponent() {
                                   <Controller
                                       name={"email"}
                                       control={control}
-                                      rules={ authEmailValidation() }
+                                      rules={ authEmailValidation(t) }
                                       render={({ field }) =>
                                           <TextField
                                               {...field}
@@ -171,8 +173,8 @@ function RegisterComponent() {
                                               onChange={(e) => field.onChange(e)}
                                               error={!!errors.email?.message}
                                               id="outlined-basic"
+                                              label={t('auth.field.email')}
                                               helperText={errors.email?.message}
-                                              label="Email"
                                               variant="outlined" />
                                       }
                                   />
@@ -181,7 +183,7 @@ function RegisterComponent() {
                                   <Controller
                                       name="password"
                                       control={control}
-                                      rules={ authPasswordValidation() }
+                                      rules={ authPasswordValidation(t) }
                                       render={({ field }) =>
                                           <TextField
                                               type={process.showPassword ? 'text' : 'password'}
@@ -196,12 +198,13 @@ function RegisterComponent() {
                                                       setError,
                                                       clearErrors,
                                                       errors,
-                                                      touchedFields
+                                                      touchedFields,
+                                                      t
                                                   )
                                                   return field.onChange(e)
                                               }}
                                               error={checkErrorHandle('password')}
-                                              label="Password"
+                                              label={t('auth.field.password')}
                                               helperText={errors.password?.message}
                                               variant="outlined"
                                               InputProps={{
@@ -225,7 +228,7 @@ function RegisterComponent() {
                                   <Controller
                                       name="password_confirmation"
                                       control={control}
-                                      rules={ authPasswordConfirmValidation(getValues) }
+                                      rules={ authPasswordConfirmValidation(getValues, t) }
                                       render={({ field }) =>
                                           <TextField
                                               type={process.showPasswordConfirm ? 'text' : 'password'}
@@ -234,7 +237,7 @@ function RegisterComponent() {
                                               error={checkErrorHandle('password_confirmation')}
                                               id="outlined-basic"
                                               helperText={errors.password_confirmation?.message}
-                                              label="Password confirm"
+                                              label={t('auth.field.password_confirm')}
                                               variant="outlined"
                                               InputProps={{
                                                   endAdornment: (
@@ -245,7 +248,7 @@ function RegisterComponent() {
                                                               onMouseDown={handleMouseDownPassword}
                                                               edge="end"
                                                           >
-                                                              {process.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                              {process.showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
                                                           </IconButton>
                                                       </InputAdornment>
                                                   )
@@ -259,11 +262,11 @@ function RegisterComponent() {
                                       fullWidth={true}
                                       loading={ process.loading }
                                       variant="contained"
-                                  >Submit</LoadingButton>
+                                  >{ t('auth.button.sign_up') }</LoadingButton>
                               </Grid>
                               <Grid item lg={12}>
                                   <Button variant="outlined" fullWidth>
-                                      <Link to='/login'>Sign In</Link>
+                                      <Link to='/login'>{ t('auth.link.to_sign_in') }</Link>
                                   </Button>
                               </Grid>
                           </Grid>

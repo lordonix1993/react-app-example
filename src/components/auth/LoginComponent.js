@@ -17,11 +17,13 @@ import { useForm, Controller } from "react-hook-form"
 import { loginAuthAction } from "../../store/actions/AuthActions"
 import { authEmailValidation, authPasswordValidation } from "../../utils/validates/auth/LoginAuthValidate";
 import AuthWrapComponent from "./AuthWrapComponent";
+import {useTranslation} from "react-i18next";
 
 function LoginComponent() {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const location = useLocation()
+    const { t } = useTranslation()
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         defaultValues: {
             email: '',
@@ -72,10 +74,10 @@ function LoginComponent() {
                                 setProcessToState('globalError', res.data?.message)
                                 break
                             default:
-                                setProcessToState('globalError', 'Error Sign in')
+                                setProcessToState('globalError', t('auth.error.sign_in.default_status'))
                         }
                     } else {
-                        setProcessToState('globalError', 'Your authorization is fail')
+                        setProcessToState('globalError', t('auth.error.sign_in.global_error'))
                     }
 
                 }
@@ -117,7 +119,7 @@ function LoginComponent() {
                               alignItems="center"
                           >
                               <Grid item lg={12}>
-                                  <h1>Sign in</h1>
+                                  <h1>{ t('auth.title.sign_in') }</h1>
                               </Grid>
 
                               {process.globalError !== '' && (
@@ -132,7 +134,7 @@ function LoginComponent() {
                                   <Controller
                                       name={ "email" }
                                       control={ control }
-                                      rules={ authEmailValidation() }
+                                      rules={ authEmailValidation(t) }
                                       render={({ field }) =>
                                           <TextField
                                               {...field}
@@ -142,7 +144,7 @@ function LoginComponent() {
                                               error={!!errors.email?.message}
                                               id="outlined-basic"
                                               helperText={errors.email?.message}
-                                              label="Email"
+                                              label={ t('auth.field.email') }
                                               variant="outlined" />
                                         }
                                   />
@@ -151,7 +153,7 @@ function LoginComponent() {
                                   <Controller
                                       name={ "password" }
                                       control={ control }
-                                      rules={ authPasswordValidation() }
+                                      rules={ authPasswordValidation(t) }
                                       render={({ field }) =>
                                           <TextField
                                               {...field}
@@ -161,7 +163,7 @@ function LoginComponent() {
                                               type={process.showPassword ? 'text' : 'password'}
                                               error={!!errors.password?.message}
                                               id="outlined-basic"
-                                              label="Password"
+                                              label={ t('auth.field.password') }
                                               helperText={errors.password?.message}
                                               variant="outlined"
                                               InputProps={{
@@ -190,11 +192,11 @@ function LoginComponent() {
                                       size="large"
                                       loading={process.loading}
                                       variant="contained"
-                                  >Submit</LoadingButton>
+                                  >{ t('auth.button.sign_in') }</LoadingButton>
                               </Grid>
                               <Grid item lg={12}>
                                   <Button variant="outlined" fullWidth>
-                                      <Link to='/register'>Registration</Link>
+                                      <Link to='/register'>{ t('auth.link.to_sign_up') }</Link>
                                   </Button>
                               </Grid>
                           </Grid>

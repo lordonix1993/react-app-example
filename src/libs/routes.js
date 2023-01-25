@@ -3,10 +3,10 @@ import ErrorPageComponent from "../components/ErrorPageComponent";
 import LoginComponent from "../components/auth/LoginComponent";
 import RegisterComponent from '../components/auth/RegisterComponent';
 import App from '../App';
-import MainLayoutComponent from "../components/MainLayoutComponent";
-import DashboardComponent from "../components/DashboardComponent";
+import MainLayoutComponent from "../components/layouts/MainLayoutComponent";
+import DashboardComponent from "../components/pages/DashboardComponent";
 import CheckAuthMiddleware from "../middlewares/CheckAuthMiddleware";
-import CreativesComponent from "../components/CreativesComponent";
+import CreativesComponent from "../components/pages/CreativesComponent";
 import ServerErrorComponent from "../components/ServerErrorComponent";
 
 const router = createBrowserRouter([

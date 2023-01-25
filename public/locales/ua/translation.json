@@ -1,7 +1,67 @@
 {
   "auth": {
     "button": {
-      "logout": "Вийти"
+      "logout": "Вийти",
+      "sign_in": "Надіслати",
+      "sign_up": "Надіслати"
+    },
+    "validation": {
+      "email": {
+        "required": "Це поле є обов'язковим.",
+        "validate": "Недійсна електронна адреса."
+      },
+      "name": {
+        "required": "Це поле є обов'язковим."
+      },
+      "password": {
+        "required": "Це поле є обов'язковим.",
+        "max_length": "Пароль не може бути більшим ніж {{length}}.",
+        "min_length": "Пароль має бути не менше {{length}}."
+      },
+      "password_confirmation": {
+        "required": "Це поле є обов'язковим.",
+        "max_length": "Пароль не може бути більшим ніж {{length}}.",
+        "min_length": "Пароль має бути не менше {{length}}.",
+        "validate": "Пароль підтвердження не збігається з паролем",
+        "validate_with_pass": "Пароль підтвердження не збігається з паролем"
+      }
+    },
+    "link": {
+      "to_sign_up": "Реєстрація",
+      "to_sign_in": "Авторизація"
+    },
+    "title": {
+      "sign_in": "Авторизація",
+      "sign_up": "Реєстрація"
+    },
+    "field": {
+      "name": "Ім'я",
+      "email": "Електрона пошта",
+      "password": "Пароль",
+      "password_confirm": "Підтвердити пароль"
+    },
+    "error": {
+      "sign_in": {
+        "default_status": "Помилка входу",
+        "global_error": "Ваша авторизація не виконана"
+      },
+      "sign_up": {
+        "default_status": "Помилка реєстрації",
+        "global_error": "Ваша реєстрація не виконана"
+      }
     }
+  },
+  "common": {
+    "language": "Мова"
+  },
+  "creatives": {
+    "welcome": "Вітаємо, {{userName}} на сторінці реклами"
+  },
+  "dashboard": {
+    "welcome": "Вітаємо, {{userName}} на головній сторінці"
+  },
+  "link": {
+    "to_creatives": "На сторінку реклами",
+    "to_dashboard": "На головну"
   }
 }
