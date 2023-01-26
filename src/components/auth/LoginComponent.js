@@ -1,5 +1,5 @@
 import {Link, useLocation} from "react-router-dom"
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { useDispatch } from 'react-redux'
 import styles from './Auth.module.css'
 import {
@@ -23,13 +23,17 @@ function LoginComponent() {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const location = useLocation()
-    const { t } = useTranslation()
-    const { control, handleSubmit, setError, formState: { errors } } = useForm({
+    const { t, i18n } = useTranslation()
+    const { control, handleSubmit, setError, trigger, formState: { errors } } = useForm({
         defaultValues: {
             email: '',
             password: ''
         }
     });
+
+    useEffect(() => {
+        trigger(["email", "password"])
+    }, [i18n.language]);
 
     const [process, setProcess] = useState({
         showPassword: false,
@@ -107,6 +111,7 @@ function LoginComponent() {
 
     return (
       <AuthWrapComponent>
+          {console.log('Render component')}
           <Container maxWidth="lg">
               <Grid container>
                   <Form onSubmit={handleSubmit(onSubmit)} className={styles.authGridContainer}>

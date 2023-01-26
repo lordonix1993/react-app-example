@@ -3,7 +3,7 @@ import {Form, Link, useLocation, useNavigate} from "react-router-dom"
 import styles from "./Auth.module.css"
 import LoadingButton from "@mui/lab/LoadingButton"
 import {Controller, useForm, useFormState} from "react-hook-form"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {registerAuthAction} from "../../store/actions/AuthActions";
 import {useDispatch} from "react-redux";
 import {
@@ -18,7 +18,7 @@ import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {useTranslation} from "react-i18next";
 
 function RegisterComponent() {
-    const { control, handleSubmit, setError, getValues, clearErrors, formState: { errors } } = useForm({
+    const { control, handleSubmit, setError, getValues, clearErrors, trigger, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
             email: '',
@@ -26,7 +26,7 @@ function RegisterComponent() {
             password_confirmation: '',
         }
     });
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const { touchedFields } = useFormState({
         control,
@@ -43,6 +43,10 @@ function RegisterComponent() {
         globalSuccess: '',
         globalError: ''
     });
+
+    useEffect(() => {
+        trigger(["name", "email", "password", "password_confirmation"])
+    }, [i18n.language]);
 
     const setProcessToState = (field, value) => {
         setProcess(processState => ({
