@@ -2,7 +2,7 @@ import axios from "axios";
 import { config_main } from "../config/main";
 
 export const http = axios.create({
-    baseURL: config_main.server_url_v1,
+    baseURL: `${config_main.server_url_v1}`,
 });
 
 http.interceptors.request.use(
@@ -11,6 +11,10 @@ http.interceptors.request.use(
         if(access_token !== null && access_token !== '') {
             config.headers['Authorization'] = `Bearer ${access_token}`
         }
+
+        let lang = localStorage.getItem('i18nextLng')
+        if(lang !== null) config.baseURL = `${config.baseURL}/${lang}`
+
         return config;
     },
     function (error) {

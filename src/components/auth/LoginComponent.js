@@ -13,7 +13,7 @@ import {
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Form, useNavigate } from "react-router-dom"
-import { useForm, Controller } from "react-hook-form"
+import {useForm, Controller, useFormState} from "react-hook-form"
 import { loginAuthAction } from "../../store/actions/AuthActions"
 import { authEmailValidation, authPasswordValidation } from "../../utils/validates/auth/LoginAuthValidate";
 import AuthWrapComponent from "./AuthWrapComponent";
@@ -31,9 +31,15 @@ function LoginComponent() {
         }
     });
 
+    const { isSubmitted } = useFormState({
+        control,
+    });
+
     useEffect(() => {
-        trigger(["email", "password"])
-    }, [i18n.language]);
+        if(isSubmitted) {
+            trigger(["email", "password"])
+        }
+    }, [i18n.language, isSubmitted, trigger]);
 
     const [process, setProcess] = useState({
         showPassword: false,
@@ -111,7 +117,6 @@ function LoginComponent() {
 
     return (
       <AuthWrapComponent>
-          {console.log('Render component')}
           <Container maxWidth="lg">
               <Grid container>
                   <Form onSubmit={handleSubmit(onSubmit)} className={styles.authGridContainer}>

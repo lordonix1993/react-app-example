@@ -28,7 +28,7 @@ function RegisterComponent() {
     });
     const { t, i18n } = useTranslation()
 
-    const { touchedFields } = useFormState({
+    const { touchedFields, isSubmitted } = useFormState({
         control,
     });
 
@@ -45,8 +45,10 @@ function RegisterComponent() {
     });
 
     useEffect(() => {
-        trigger(["name", "email", "password", "password_confirmation"])
-    }, [i18n.language]);
+        if(isSubmitted) {
+            trigger(["name", "email", "password", "password_confirmation"])
+        }
+    }, [i18n.language, isSubmitted, trigger]);
 
     const setProcessToState = (field, value) => {
         setProcess(processState => ({
@@ -87,7 +89,7 @@ function RegisterComponent() {
                     if(res.data !== undefined && res.data !== null) {
                         switch(res.status) {
                             case 422:
-                                validateResponseFromServer(res.data)
+                                validateResponseFromServer(res.data?.data)
                                 break
                             case 401:
                                 setProcessToState('globalError', res.data?.message)

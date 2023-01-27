@@ -27,7 +27,7 @@ export const authPasswordValidation = (t) => {
 
 export const authPasswordConfirmValidation = (getValues, t) => {
     return {
-        required: "The password confirm is required.",
+        required: t('auth.validation.password_confirmation.required'),
         maxLength: {
             value: 20,
             message: t('auth.validation.password_confirmation.max_length', {length: 20})
